@@ -1,10 +1,16 @@
-let todos = [];
+var todos = [];
 
-let savedTasks = localStorage.getItem("todos");
-if (savedTasks != null) {
-    savedTasks = JSON.parse(savedTasks);
+async function init() {
+
+    // let savedTasks = localStorage.getItem("todos");
+    let res = await fetch('http://localhost:8080/tasks');
+    const savedTasks = await res.json();
+    console.log(savedTasks, typeof savedTasks);
+
     savedTasks.map(addTask);
+
 }
+
 
 document.getElementById("add-todo-btn").addEventListener("click", () => {
     const todo = document.getElementById("input-todo");
@@ -35,10 +41,14 @@ function addTask(task) {
 
     const todoText = document.createElement("input");
     todoText.classList.add("todo-text");
-    todoText.id = todos.length - 1;
+    todoText.id = task.id;
     todoText.readOnly = true;
-    todoText.value = task;
+    todoText.value = task.text;
     p.append(todoText);
+
+    if (task.done == true) {
+        todoText.disabled = true;
+    }
 
     checkBtn.addEventListener("click", () => {
         if (todoText.disabled == false) {
@@ -94,3 +104,5 @@ function addTask(task) {
 
     saveTodos();
 }
+
+init();

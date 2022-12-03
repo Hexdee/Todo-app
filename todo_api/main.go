@@ -4,11 +4,12 @@ import (
     "net/http"
 
     "github.com/gin-gonic/gin"
+    "github.com/gin-contrib/cors"
 )
 
 type task struct {
     ID     string  `json:"id"`
-    Text  string  `json:"title"`
+    Text  string  `json:"text"`
     Done bool  `json:"done"`
 }
 
@@ -20,6 +21,7 @@ var tasks = []task{
 
 func main() {
     router := gin.Default()
+    router.Use(cors.Default())
     router.GET("/tasks", getTasks)
     router.GET("/tasks/:id", getTaskByID)
     router.POST("/task", postTask)
